@@ -1,8 +1,7 @@
 # QA Engineer Take-Home: Playwright E2E + K6 Load Testing
-
-> **App Under Test:** SauceDemo (https://www.saucedemo.com)  
-> **Primary:** Playwright (TypeScript) E2E framework (POM + fixtures + reporting)  
-> **Secondary:** K6 load test script for a public API (JSONPlaceholder)
+**App Under Test:** SauceDemo (https://www.saucedemo.com)  
+**Primary:** Playwright (TypeScript) E2E framework (POM + fixtures + reporting)  
+**Secondary:** K6 load test script for a public API (JSONPlaceholder)
 
 ---
 
@@ -12,9 +11,10 @@
 - K6 (load testing)
 - Public GitHub repository
 
-> **AI Usage (Mandatory):** AI was used during development (as per assignment requirement).  
-> **AI Tool Used:** **Google Gemini + GitHub Copilot**  
-> *(Note: ChatGPT Web UI was not used for code generation as per instructions.)*
+### AI Usage (Mandatory)
+AI tools were used during development (as required by the assignment).  
+**AI Tool Used:** **Google Gemini + GitHub Copilot**  
+*(ChatGPT Web UI was not used for code generation as per instructions.)*
 
 ---
 
@@ -48,10 +48,6 @@ project-root/
 ├── reports/ # generated outputs (HTML/JSON/artifacts)
 └── README.md
 
-yaml
-Copy code
-
----
 
 ## 3) Setup & Installation
 
@@ -59,35 +55,30 @@ Copy code
 - Node.js 18+ recommended
 - npm (comes with Node)
 
-### Install
-```bash
+### Install dependencies & browsers
+```Run in bash
 npm install
 npx playwright install
-4) Run E2E Tests
-Headless (CI/CD)
-bash
-Copy code
+4) Run E2E Tests (Playwright)
+Run in headless mode (recommended for CI/CD)
+Run in bash
 npm test
-Headed (Debug)
-bash
-Copy code
+Run in headed mode (debugging)
+Run in bash
 npm run test:headed
-Cross-browser
-bash
-Copy code
+Run cross-browser (Chromium / Firefox)
+Run in bash
 npm run test:chrome
 npm run test:firefox
 Reports
-HTML Report output: reports/html/
+HTML report: reports/html/
 
-JSON output: reports/results.json
+JSON report: reports/results.json
 
-Open HTML report:
-
-bash
-Copy code
+Open the last HTML report:
+Run in bash
 npm run report
-Screenshot on failure
+Failure artifacts (auto)
 Configured in playwright.config.ts:
 
 screenshot: 'only-on-failure'
@@ -96,26 +87,27 @@ video: 'retain-on-failure'
 
 trace: 'retain-on-failure'
 
-Artifacts are stored under:
+Artifacts path:
 
 reports/artifacts/
 
 5) Test Scenarios Covered (5+)
-Valid login -> lands on Inventory page
+Valid login → lands on Inventory page
 
-Invalid login -> shows error message
+Invalid login → shows error message
 
-Navigation -> open item details -> back to inventory
+Navigation → open item details → back to inventory
 
-Complex flow -> add to cart -> checkout -> finish -> success confirmation
+Complex flow → add to cart → checkout → finish → success confirmation
 
-Form validation -> missing first name -> validation error
+Form validation → missing first name → validation error
 
-Edge case -> accessing inventory without login redirects to login
+Edge case → accessing inventory without login redirects to login
 
 6) Load Testing (K6)
 Script
-load/k6/jsonplaceholder.js targets:
+File: load/k6/jsonplaceholder.js
+Target API:
 
 GET https://jsonplaceholder.typicode.com/posts/1
 
@@ -131,28 +123,32 @@ powershell
 Copy code
 winget install -e --id GrafanaLabs.k6 --source winget
 Linux
-Use your package manager / official installation method.
+Use your distro package manager / official installation method.
 
-Run script
+Run load test
 bash
 Copy code
 k6 run load/k6/jsonplaceholder.js
 Practical Concepts Demonstrated
-Virtual users (VUs) via staged ramp-up / hold / ramp-down
-
-Ramp-up configuration using stages
-
-Basic assertions (status code, response time, response body)
+Virtual users (VUs) using staged ramp-up / hold / ramp-down
 
 Thresholds:
 
 http_req_duration: p95 < 500ms
 
-http_req_failed: < 2% (public APIs can occasionally timeout)
+http_req_failed: < 2% (public APIs may occasionally timeout)
+
+Basic checks:
+
+status code
+
+response time
+
+response body validation
 
 7) Load Testing Theory (Understanding)
 Sample Run Results (Local)
-Test profile: 10 VUs (ramp-up 15s, hold 30s, ramp-down 15s)
+Profile: 10 VUs (ramp-up 15s, hold 30s, ramp-down 15s)
 
 Throughput: ~6.68 req/s (403 requests in ~60s)
 
@@ -163,15 +159,15 @@ Error rate: 0.49% (2 failed requests out of 403) — occasional timeouts on a pu
 Thresholds: p95 < 500ms ✅ and http_req_failed < 2% ✅
 
 Types of Load Testing
-Load Testing: Expected/normal traffic to validate performance under typical usage.
+Load Testing: Validate performance under expected/normal traffic.
 
-Stress Testing: Push beyond capacity to find breaking point and observe failure modes.
+Stress Testing: Push beyond capacity to find breaking point and failure behavior.
 
-Spike Testing: Sudden traffic spikes to see how system handles sharp increases/decreases.
+Spike Testing: Sudden traffic spikes to validate recovery and stability.
 
-Soak/Endurance Testing: Sustained load for long duration to detect memory leaks/resource exhaustion.
+Soak/Endurance Testing: Long-duration load to detect memory leaks/resource exhaustion.
 
-Scalability Testing: Validate how performance changes as we scale resources/users (horizontal/vertical scaling).
+Scalability Testing: Observe performance as users/resources scale (horizontal/vertical).
 
 Key Metrics to Monitor
 Response time: avg, p95, p99
@@ -180,18 +176,17 @@ Throughput: requests/sec
 
 Error rate: failed requests %
 
-Resource utilization: CPU, memory, DB connections, thread pools (if you control infra)
+Resource usage: CPU, memory, DB connections (if infra is available)
 
-Saturation indicators: queue length, connection pool exhaustion, rate limiting
+Saturation: queue length, connection pool exhaustion, rate limiting
 
 When to Use Which
-Use Load testing before release for baseline performance.
+Load: baseline performance before release
 
-Use Stress testing to determine max capacity and graceful degradation.
+Stress: find maximum capacity & degradation behavior
 
-Use Spike testing for marketing campaigns or unpredictable traffic bursts.
+Spike: campaign traffic bursts / sudden load changes
 
-Use Soak testing for long-running stability (overnight/weekend run).
+Soak: long running stability (overnight/weekend)
 
-Use Scalability testing when planning infra scaling or verifying autoscaling.
-
+Scalability: infra scaling / autoscaling validation

@@ -8,7 +8,6 @@ export const options = {
     { duration: '15s', target: 0 },  // ramp down
   ],
   thresholds: {
-    // Public/free APIs may occasionally refuse connections; keep a realistic threshold.
     http_req_failed: ['rate<0.02'],   // <2% errors allowed
     http_req_duration: ['p(95)<500'], // 95% < 500ms
   },
@@ -24,7 +23,7 @@ export default function () {
     'status is 200': (r) => r.status === 200,
     'response time < 500ms': (r) => r.timings && r.timings.duration < 500,
     'has userId': (r) => {
-      if (r.status !== 200) return false; // don't parse non-200 responses
+      if (r.status !== 200) return false;
       try {
         const body = r.json(); // k6 built-in JSON parsing
         return body && body.userId !== undefined;
