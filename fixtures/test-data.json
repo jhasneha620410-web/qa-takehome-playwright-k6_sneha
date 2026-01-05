@@ -1,0 +1,18 @@
+{
+  "baseUrl": "https://www.saucedemo.com",
+  "users": {
+    "valid": {
+      "username": "standard_user",
+      "password": "secret_sauce"
+    },
+    "invalid": {
+      "username": "standard_user",
+      "password": "wrong_password"
+    }
+  },
+  "checkout": {
+    "firstName": "Sneha",
+    "lastName": "Jha",
+    "postalCode": "110001"
+  }
+}
